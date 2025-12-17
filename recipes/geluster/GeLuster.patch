@@ -1,0 +1,11 @@
+diff --git a/GeLuster b/GeLuster
+index 9553924..eb6cd49 100755
+--- a/GeLuster
++++ b/GeLuster
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-shellpath=`dirname $0`
++shellpath=`dirname $(realpath $0)`
+ output_dir="geluster_outdir"
+ temp_dir="tempDir"
+ reads="No_input"

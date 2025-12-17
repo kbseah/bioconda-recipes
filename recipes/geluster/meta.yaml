@@ -1,0 +1,44 @@
+{% set name = "GeLuster" %}
+{% set version = "1.1" %}
+
+package:
+  name: {{ name | lower }}
+  version: {{ version }}
+
+build:
+  number: 0
+  run_exports:
+    - {{ pin_subpackage(name|lower, max_pin="x") }}
+
+source:
+  url: https://github.com/yutingsdu/{{ name }}/archive/refs/tags/v.{{ version }}.tar.gz
+  sha256: a21bb0af33c86988efbd27bfd8cc89aaaf1039c47e18e7cb9b9d9f1e88c7d5bf
+  patches:
+    - GeLuster.patch
+
+requirements:
+  build:
+    - make
+    - {{ compiler('cxx') }} 
+    - {{ compiler('c') }} 
+  host:
+    - zlib
+  run:
+    - zlib
+    - minimap2
+    - samtools
+
+about:
+  home: https://github.com/yutingsdu/GeLuster
+  license: GPL-3.0
+  license_file: LICENSE
+  summary: GeLuster is a highly efficient tool for clustering long-read transcriptomic data.
+
+test:
+  commands:
+    - GeLuster --help | grep "GeLuster usage"
+    - GeLuster -r ${PREFIX}/opt/geluster-${PKG_VERSION}/sample_test/Test.fastq -f fq -s cDNA -o ${PREFIX}/opt/geluster-${PKG_VERSION}/sample_test/geluster_outdir
+
+extra:
+  identifiers:
+    - doi:10.1093/bioinformatics/btae059
