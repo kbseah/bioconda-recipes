@@ -1,0 +1,78 @@
+{% set name = "peptdeep" %}
+{% set version = "1.4.1" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/MannLabs/alphapeptdeep/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: "6ba483b70058f96e494bcff143fd8bf293ea600f191622061a0238b7eb265025"
+
+build:
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
+  noarch: python
+  entry_points:
+    - peptdeep = peptdeep.cli:run
+  run_exports:
+    - {{ pin_subpackage(name, max_pin='x') }}
+
+requirements:
+  host:
+    - python >=3.8.0
+    - pip
+    - setuptools
+  run:
+    - python >=3.8.0
+    - click ==8.1.7
+    - pandas ==2.2.3
+    - numpy <2
+    # torch 2.5.1 not available on darwin-x86_64:
+    - pytorch ==2.5.1 # [not osx]
+    - pytorch ==2.2.2 # [osx]
+    - tqdm ==4.67.1
+    - numba ==0.60.0
+    - psutil ==6.1.0
+    - transformers ==4.47.0
+    - scikit-learn ==1.6.0
+    - lxml ==5.3.0
+    - pyteomics ==4.7.5
+    - alphabase >=1.5.0
+    - alpharaw >=0.2.0
+
+test:
+  commands:
+    - peptdeep -h
+    - peptdeep export-settings -h
+    - peptdeep cmd-flow -h
+    - peptdeep library -h
+    - peptdeep transfer -h
+    - peptdeep rescore -h
+    - pip check
+  imports:
+    - peptdeep
+  requires:
+    - pip
+
+
+about:
+  home: https://alphapept.org/
+  dev_url: https://github.com/MannLabs/alphapeptdeep
+  doc_url: https://alphapeptdeep.readthedocs.io/en/latest/
+  license: Apache-2.0
+  license_file: LICENSE.txt
+  summary: "Deep learning framework for proteomics"
+  description: |
+    AlphaPeptDeep (peptdeep for short) aims to easily build new deep learning
+    models for shotgun proteomics studies. Transfer learning is also easy to
+    apply using AlphaPeptDeep.
+
+    It contains some built-in models such as retention time (RT), collision
+    cross section (CCS), and tandem mass spectrum (MS2) prediction for given
+    peptides. With these models, one can easily generate a predicted library
+    from fasta files.
+
+extra:
+  identifiers:
+    - doi:10.1038/s41467-022-34904-3
