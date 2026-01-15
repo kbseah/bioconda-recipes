@@ -1,0 +1,66 @@
+{% set name = "alphabase" %}
+{% set version = "1.8.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/alphabase-{{ version }}.tar.gz
+  sha256: dbfeaec4dea11ac6b56849ffd5518d5b0d59e084943e191f6125ab3e4a0ca9b1
+
+build:
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python >=3.8
+    - setuptools
+    - pip
+  run:
+    - python >=3.8
+    - numba
+    - numpy
+    - pandas
+    - h5py
+    - contextlib2
+    - python-xxhash
+    - biopython
+    - tqdm
+    - regex
+    - pyarrow
+    - pyahocorasick
+    - pyteomics
+    - pyyaml
+    - lxml
+    - rdkit
+
+test:
+  imports:
+    - alphabase
+    - dist
+    - docs
+    - misc
+    - nbs_tests
+    - requirements
+    - scripts
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  summary: An infrastructure Python package of the AlphaX ecosystem
+  license: Apache-2.0
+  license_file: LICENSE.txt
+  dev_url: https://github.com/MannLabs/alphabase
+  doc_url: https://alphabase.readthedocs.io/
+
+
+extra:
+  identifiers:
+    - doi:10.1038/s41467-022-34904-3
+  recipe-maintainers:
+    - kbseah
